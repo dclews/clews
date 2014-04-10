@@ -26,6 +26,8 @@ public:
     int GetInt(const char* key);
     int GetInt(const std::string& key);
 
+    std::map<std::string, std::string>& RawMap();
+
     std::string operator [](const char* key);
     void Print();
 };

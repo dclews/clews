@@ -34,6 +34,12 @@ void HttpResponse::SetContent(std::string content)
     mContentLength = mContent.length();
 }
 
+void HttpResponse::SetContent(HttpResource& res)
+{
+    SetContent(res.Content());
+    SetContentType(res.Mime().RawType());
+}
+
 uint32_t HttpResponse::StatusCode()
 {
     return mStatusCode;

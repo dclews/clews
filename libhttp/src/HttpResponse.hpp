@@ -8,6 +8,7 @@ typedef id_t zoneid_t;
 #endif
 #include <string>
 #include "HttpResponseDB.hpp"
+#include "HttpResource.hpp"
 #include <ctime>
 
 class HttpResponse
@@ -17,6 +18,7 @@ private:
     std::string mHttpVersion;
     uint32_t mStatusCode;
     uint32_t mContentLength;
+
     std::string mDate;
     std::string mContentType;
     std::string mContent;
@@ -26,6 +28,7 @@ public:
     void SetDate(std::string date);
     void SetContentType(std::string mime);
     void SetContent(std::string content);
+    void SetContent(HttpResource& res);
 
     uint32_t StatusCode();
     std::string StatusLine();

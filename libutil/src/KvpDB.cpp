@@ -102,6 +102,11 @@ int KvpDB::GetInt(const string& key)
 {
     return GetInt(key.data());
 }
+
+std::map<string, string>&KvpDB::RawMap()
+{
+    return mKvpMap;
+}
 void KvpDB::Print()
 {
     for(map<string, string>::iterator it=mKvpMap.begin();it!=mKvpMap.end();++it)

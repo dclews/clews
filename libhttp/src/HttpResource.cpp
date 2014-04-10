@@ -54,3 +54,15 @@ int HttpResource::Load()
     }
     return success;
 }
+void HttpResource::ReplaceTokens(map<string, string> tokenMap)
+{
+    map<string, string>::iterator tokIt;
+    for(tokIt=tokenMap.begin();tokIt!=tokenMap.end();++tokIt)
+    {
+        size_t strPos = mContent.find(tokIt->first);
+        if(strPos != string::npos)
+        {
+            mContent.replace(strPos, strPos+tokIt->first.length(), tokIt->second);
+        }
+    }
+}

@@ -2,6 +2,7 @@
 #define HTTP_RESOURCE_HPP
 
 #include <string>
+#include <map>
 #include <clews/mime/MimeDB.hpp>
 #include <clews/mime/MimeType.hpp>
 
@@ -19,7 +20,8 @@ public:
     std::string Content();
     uint32_t ContentLength();
     MimeType Mime();
-    int Load();
+    virtual int Load();
+    void ReplaceTokens(std::map<std::string, std::string> tokenMap);
 };
 
 #endif
