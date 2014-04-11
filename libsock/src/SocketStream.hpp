@@ -15,48 +15,37 @@ typedef id_t zoneid_t;
 #include <cstdlib>
 #include <stdlib.h>
 #include <unistd.h>
+#include <vector>
 
 #include <sys/types.h> 
 #include <sys/socket.h>
 
 #include <netinet/in.h>
-#include <netdb.h> 
-
+#include "SocketConnection.hpp"
 #include <clews/core/CoreObject.hpp>
 
-class SocketStream : public CoreObject
+class Socket : public CoreObject
 {
 private:
-    int mSocketFD, mBindSocketFD;
+    int mSocketFD;
     uint32_t mPortNumber;
     uint32_t mBufferSize;
     bool mIsOpen;
-    uint32_t mForeignIP;
-    std::string mForeignIPStr;
-    uint16_t mForeignPort;
+    std::vector<SocketConnection*> mConnections;
 public:
-    SocketStream(uint32_t portNumber, int bufferSize);
-    ~SocketStream();
+    Socket(uint32_t portNumber, int bufferSize);
+    ~Socket();
 
-    bool Open(std::string hostname);
-	bool Close();
+    SocketConnection* Open(std::string hostname);
 
 	bool Create();
 	bool Destroy();
 	
-    std::string Read();
-    std::string Readn(int bufferSize);
-    std::string ReadLine();
-
-    void Write(const std::string& msg);
-    void WriteLine(const std::string& msg);
-
-    int Listen();
-    int Accept();
+    bool Listen();
+    SocketConnection* Accept();
 
     int FD();
-    void operator<<(std::string msg);
-    void operator>>(std::string& msg);
+
 
     int BindToFD(int fd);
 };
