@@ -6,6 +6,7 @@
 #include <clews/utility/StringUtil.hpp>
 #include <map>
 #include <string>
+#include <mutex>
 
 class KvpDB : public CoreObject
 {
@@ -13,6 +14,7 @@ private:
     std::map<std::string, std::string> mKvpMap;
     char mDelimiter;
     std::string mLoadedDBPath;
+    std::mutex mRWLock;
 public:
     KvpDB(std::string typeIDv="KvpDB", char delim='=');
     virtual bool Load(const char* dbPath);

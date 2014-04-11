@@ -5,8 +5,10 @@ using namespace std;
 
 KvpDB::KvpDB(std::string typeID, char delim) : CoreObject(typeID), mDelimiter(delim) {}
 
+//!MUTEX
 bool KvpDB::Load(const char* dbPath)
 {
+    mRWLock.lock();
     SetPrintPrefix(__func__, FUNC_PRINT);
 
     bool ret = false;
@@ -36,8 +38,9 @@ bool KvpDB::Load(const char* dbPath)
     {
         ErrorOut() << "Failed to read DB file: " << dbPath << endl;
     }
-
     ClearPrintPrefix();
+
+    mRWLock.unlock();
     return ret;
 }
 bool KvpDB::Load(const std::string& dbPath)
@@ -70,6 +73,7 @@ std::string KvpDB::Get(const char* key)
 }
 std::string KvpDB::Get(const string& key)
 {
+    mRWLock.lock();
     SetPrintPrefix(__func__, FUNC_PRINT);
     string value;
 
@@ -83,6 +87,7 @@ std::string KvpDB::Get(const string& key)
     }
     DebugOut() << "Found string: " << value << endl;
     ClearPrintPrefix();
+    mRWLock.unlock();
     return value;
 }
 int KvpDB::GetInt(const char* key)
