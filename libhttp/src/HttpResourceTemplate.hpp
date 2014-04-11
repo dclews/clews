@@ -10,7 +10,7 @@ class HttpResourceTemplate : public HttpResource
 private:
     std::map<std::string, std::string> mTokens;
 public:
-    HttpResourceTemplate(std::string url, Server& mimeDB, std::map<std::string, std::string> tokens=std::map<std::string, std::string>());
+    HttpResourceTemplate(std::string url, MimeDB& mimeDB, std::map<std::string, std::string> tokens=std::map<std::string, std::string>());
     int Load();
 };
 
