@@ -20,8 +20,8 @@ typedef id_t zoneid_t;
 #include <sys/types.h> 
 #include <sys/socket.h>
 
-#include <netinet/in.h>
 #include "SocketConnection.hpp"
+#include "SocketClient.hpp"
 #include <clews/core/CoreObject.hpp>
 
 class Socket : public CoreObject
@@ -29,11 +29,11 @@ class Socket : public CoreObject
 private:
     int mSocketFD;
     uint32_t mPortNumber;
-    uint32_t mBufferSize;
+    size_t mBufferSize;
     bool mIsOpen;
     std::vector<SocketConnection*> mConnections;
 public:
-    Socket(uint32_t portNumber, int bufferSize);
+    Socket(uint32_t portNumber, size_t bufferSize);
     ~Socket();
 
     SocketConnection* Open(std::string hostname);
@@ -41,13 +41,8 @@ public:
 	bool Create();
 	bool Destroy();
 	
-    bool Listen();
+    int Listen();
     SocketConnection* Accept();
-
-    int FD();
-
-
-    int BindToFD(int fd);
 };
 
 #endif
