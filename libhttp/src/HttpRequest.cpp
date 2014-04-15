@@ -106,7 +106,7 @@ std::string HttpRequest::Content()
     }
     return content;
 }
-std::string HttpRequest::FullResponse()
+std::string HttpRequest::FullRequest()
 {
     return Header() + "\r\n" + Content();
 }

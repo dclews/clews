@@ -38,7 +38,7 @@ public:
     HttpRequest(std::string requestBuffer);
 
     std::string RequestType();
-    std::string RequestedFile();
+    std::string RequestedResource();
     std::string HttpVersion();
     UserAgent UserAgentObj();
 
@@ -47,7 +47,7 @@ public:
 
     std::string Header();
     std::string Content();
-    std::string FullResponse();
+    std::string FullRequest();
 
     void PrintHeader();
 };
