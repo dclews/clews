@@ -30,12 +30,15 @@ vector<string>& split(const string &s, const string& delim, std::vector<string> 
     size_t startPos = 0;
     size_t delimPos = 0;
     std::string token;
-    while ((delimPos = s.find(delim, startPos)) != std::string::npos) {
+    while ((delimPos = s.find(delim, startPos)) != std::string::npos)
+    {
         token = s.substr(startPos, delimPos);
         std::cout << token << std::endl;
         elems.push_back(token);
         startPos = delimPos + delim.length();
     }
+
+    return elems;
 }
 
 string trimRight(string str, string toTrim)
