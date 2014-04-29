@@ -2,7 +2,7 @@
 
 using namespace std;
 
-MimeDB::MimeDB() : KvpDB("MimeDB", '\t')
+MimeDB::MimeDB() : KvpDB("MimeDB", "\t")
 {
 }
 MimeType MimeDB::GetMime(const string& filePath)

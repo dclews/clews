@@ -12,12 +12,12 @@ class KvpDB : public CoreObject
 {
 private:
     std::map<std::string, std::string> mKvpMap;
-    char mDelimiter;
+    std::string mDelimiter;
     std::string mLineEnd;
     std::string mLoadedDBPath;
     std::mutex mRWLock;
 public:
-    KvpDB(std::string typeIDv="KvpDB", char delim='=', std::string lineEnd="\n");
+    KvpDB(std::string typeIDv="KvpDB", std::string delim="=", std::string lineEnd="\n");
     virtual bool LoadFile(const char* dbPath);
     bool LoadFile(const std::string& dbPath);
     virtual bool Reload();

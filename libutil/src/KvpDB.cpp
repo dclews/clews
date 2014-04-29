@@ -3,7 +3,7 @@
 
 using namespace std;
 
-KvpDB::KvpDB(std::string typeID, char delim, std::string lineEnd) : CoreObject(typeID), mDelimiter(delim), mLineEnd(lineEnd) {}
+KvpDB::KvpDB(std::string typeID, std::string delim, std::string lineEnd) : CoreObject(typeID), mDelimiter(delim), mLineEnd(lineEnd) {}
 
 //!MUTEX
 bool KvpDB::LoadFile(const char* dbPath)
@@ -35,7 +35,7 @@ bool KvpDB::LoadFile(const std::string& dbPath)
 }
 bool KvpDB::Load(string buffer)
 {
-    vector <string> splitLines = split(buffer, mLineEnd);
+    vector<string> splitLines = split(buffer, mLineEnd);
     return Load(splitLines);
 }
 bool KvpDB::Load(vector<string>& fileLines)

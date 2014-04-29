@@ -3,7 +3,7 @@
 
 using namespace std;
 
-HttpResponseDB::HttpResponseDB() : KvpDB("HttpResponseDB", '\t') {}
+HttpResponseDB::HttpResponseDB() : KvpDB("HttpResponseDB", "\t") {}
 
 std::string HttpResponseDB::ResponseString(int statusCode)
 {
