@@ -14,7 +14,9 @@ typedef id_t zoneid_t;
 #include <algorithm>
 
 std::vector<std::string> split(const std::string& s, char delim);
+std::vector<std::string> split(const std::string &s, const std::string& delim);
 std::vector<std::string>& split(const std::string& s, char delim, std::vector<std::string>& elems);
+std::vector<std::string>& split(const std::string& s, const std::string& delim, std::vector<std::string>& elems);
 std::string concat(std::vector<std::string> parts, std::string delim);
 
 std::string trimLeft(std::string str, std::string toTrim);

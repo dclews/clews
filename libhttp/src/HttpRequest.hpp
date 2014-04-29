@@ -18,7 +18,7 @@ class HttpRequest
 private:
     std::string mRequestLine;
     std::string mRequestType;
-    std::string mRequestFile;
+    std::string mRequestResource;
     std::string mHttpVersion;
 
     int mStatusCode;

@@ -3,10 +3,10 @@
 
 using namespace std;
 
-KvpDB::KvpDB(std::string typeID, char delim) : CoreObject(typeID), mDelimiter(delim) {}
+KvpDB::KvpDB(std::string typeID, char delim, std::string lineEnd) : CoreObject(typeID), mDelimiter(delim), mLineEnd(lineEnd) {}
 
 //!MUTEX
-bool KvpDB::Load(const char* dbPath)
+bool KvpDB::LoadFile(const char* dbPath)
 {
     mRWLock.lock();
     SetPrintPrefix(__func__, FUNC_PRINT);
@@ -16,23 +16,9 @@ bool KvpDB::Load(const char* dbPath)
     vector<string> fileBuffer = readFile(dbPath, success);
     if(success)
     {
-        mKvpMap.clear();
-        for(unsigned int i=0;i<fileBuffer.size();++i)
-        {
-            vector<string> splitLine = split(fileBuffer.at(i), mDelimiter);
-
-            if(splitLine.size() == 2)
-            {
-                mKvpMap[splitLine.at(0)] = splitLine.at(1);
-            }
-            else
-            {
-                ErrorOut() << "Malformed entry: " << fileBuffer[i] << " from DB: " << dbPath << endl;
-            }
-        }
-        mLoadedDBPath = dbPath;
-        ret = true;
+        ret = Load(fileBuffer);
         StandardOut() << "Loaded DB from: " << dbPath << endl;
+        mLoadedDBPath = dbPath;
     }
     else
     {
@@ -43,16 +29,40 @@ bool KvpDB::Load(const char* dbPath)
     mRWLock.unlock();
     return ret;
 }
-bool KvpDB::Load(const std::string& dbPath)
+bool KvpDB::LoadFile(const std::string& dbPath)
 {
-    return Load(dbPath.data());
+    return LoadFile(dbPath.data());
 }
+bool KvpDB::Load(string buffer)
+{
+    vector <string> splitLines = split(buffer, mLineEnd);
+    return Load(splitLines);
+}
+bool KvpDB::Load(vector<string>& fileLines)
+{
+    mKvpMap.clear();
+    for(unsigned int i=0;i<fileLines.size();++i)
+    {
+        vector<string> splitLine = split(fileLines.at(i), mDelimiter);
+
+        if(splitLine.size() == 2)
+        {
+            mKvpMap[splitLine.at(0)] = splitLine.at(1);
+        }
+        else
+        {
+            ErrorOut() << "Malformed entry: " << fileLines.at(i) << endl;
+        }
+    }
+    return true;
+}
+
 bool KvpDB::Reload()
 {
     SetPrintPrefix(__func__, FUNC_PRINT);
     StandardOut() << "Reloading DB: " << mLoadedDBPath << endl;
     ClearPrintPrefix();
-    return Load(mLoadedDBPath.data());
+    return LoadFile(mLoadedDBPath.data());
 }
 
 string KvpDB::LoadedDBPath()
@@ -118,4 +128,14 @@ void KvpDB::Print()
     {
         StandardOut() << it->first << mDelimiter << it->second << endl;
     }
+}
+
+string KvpDB::ToString()
+{
+    string mapStr;
+    for(map<string, string>::iterator it=mKvpMap.begin();it!=mKvpMap.end();++it)
+    {
+        mapStr+=it->first+mDelimiter+it->second+'\n';
+    }
+    return mapStr;
 }

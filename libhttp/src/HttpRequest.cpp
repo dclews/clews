@@ -13,6 +13,7 @@ HttpRequest::HttpRequest(std::string requestBuffer)
         mRequestLine = requestLinesBuffer.at(0);
         ParseRequestLine(mRequestLine);
     }
+
     size_t i=1;
     while(i<requestLinesBuffer.size() && requestLinesBuffer.at(i) != "\r\n" && !requestLinesBuffer.at(i).empty())
     {
@@ -49,7 +50,7 @@ bool HttpRequest::ParseRequestLine(string requestLine)
         if(splitLine.at(0) == "GET" && splitLine.size() == 3)
         {
             mRequestType = "GET";
-            mRequestFile = splitLine.at(1);
+            mRequestResource = splitLine.at(1);
             mHttpVersion = splitLine.at(2);
         }
     }
@@ -60,9 +61,9 @@ string HttpRequest::RequestType()
 {
     return mRequestType;
 }
-string HttpRequest::RequestedFile()
+string HttpRequest::RequestedResource()
 {
-    return mRequestFile;
+    return mRequestResource;
 }
 string HttpRequest::HttpVersion()
 {

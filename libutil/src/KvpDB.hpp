@@ -2,8 +2,8 @@
 #define KVP_DB_HPP
 
 #include <clews/core/CoreObject.hpp>
-#include <clews/utility/FileUtil.hpp>
-#include <clews/utility/StringUtil.hpp>
+#include "FileUtil.hpp"
+#include "StringUtil.hpp"
 #include <map>
 #include <string>
 #include <mutex>
@@ -13,12 +13,13 @@ class KvpDB : public CoreObject
 private:
     std::map<std::string, std::string> mKvpMap;
     char mDelimiter;
+    std::string mLineEnd;
     std::string mLoadedDBPath;
     std::mutex mRWLock;
 public:
-    KvpDB(std::string typeIDv="KvpDB", char delim='=');
-    virtual bool Load(const char* dbPath);
-    bool Load(const std::string& dbPath);
+    KvpDB(std::string typeIDv="KvpDB", char delim='=', std::string lineEnd="\n");
+    virtual bool LoadFile(const char* dbPath);
+    bool LoadFile(const std::string& dbPath);
     virtual bool Reload();
 
     std::string LoadedDBPath();
@@ -32,6 +33,9 @@ public:
 
     std::string operator [](const char* key);
     void Print();
+    std::string ToString();
+    bool Load(std::string buffer);
+    bool Load(std::vector<std::string>& fileLines);
 };
 
 #endif

@@ -19,6 +19,25 @@ vector<string>& split(const string& s, char delim, vector<string>& elems)
     }
     return elems;
 }
+vector<string> split(const string &s, const string& delim)
+{
+    vector<string> elems;
+    split(s, delim, elems);
+    return elems;
+}
+vector<string>& split(const string &s, const string& delim, std::vector<string> &elems)
+{
+    size_t startPos = 0;
+    size_t delimPos = 0;
+    std::string token;
+    while ((delimPos = s.find(delim, startPos)) != std::string::npos) {
+        token = s.substr(startPos, delimPos);
+        std::cout << token << std::endl;
+        elems.push_back(token);
+        startPos = delimPos + delim.length();
+    }
+}
+
 string trimRight(string str, string toTrim)
 {
     str.erase(str.find_last_not_of(toTrim)+1);
