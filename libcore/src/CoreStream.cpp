@@ -5,20 +5,20 @@ CoreStream::CoreStream(std::ostream& target, bool enable) : mStreamBuf(target, e
 }
 void CoreStream::SetPrefix(std::string prefix)
 {
-    mStreamBuf.SetPrefix(prefix);
+		mStreamBuf.SetPrefix(prefix);
 }
 void CoreStream::ClearPrefix()
 {
-    mStreamBuf.ClearPrefix();
+		mStreamBuf.ClearPrefix();
 }
 void CoreStream::Enable(bool doEnable)
 {
 //    std::cout << "CoreStream::Enable(" << doEnable << ")" << std::endl;
-    mStreamBuf.Enable(doEnable);
+		mStreamBuf.Enable(doEnable);
 }
 bool CoreStream::IsEnabled()
 {
-    return mEnabled;
+		return mStreamBuf.IsEnabled();
 }
 
 

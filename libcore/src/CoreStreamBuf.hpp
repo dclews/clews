@@ -13,16 +13,17 @@ typedef id_t zoneid_t;
 class CoreStreamBuffer : public std::stringbuf
 {
 private:
-    std::ostream& mOutputStream;
-    bool mEnabled;
-    std::string mPrefix;
+		std::ostream& mOutputStream;
+		bool mEnabled;
+		std::string mPrefix;
 
 public:
-    CoreStreamBuffer(std::ostream& str, bool enabled);
-    void SetPrefix(std::string prefix);
-    void ClearPrefix();
-    void Enable(bool doEnable);
-    int sync();
+		CoreStreamBuffer(std::ostream& str, bool enabled);
+		void SetPrefix(std::string prefix);
+		void ClearPrefix();
+		void Enable(bool doEnable);
+		bool IsEnabled();
+		int sync();
 };
 
 #endif

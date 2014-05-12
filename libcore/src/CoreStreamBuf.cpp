@@ -4,21 +4,25 @@ CoreStreamBuffer::CoreStreamBuffer(std::ostream& target, bool enable = true) : m
 
 void CoreStreamBuffer::SetPrefix(std::string prefix)
 {
-    //std::cout << "CoreStreamBuf::SetPrefix('" << prefix << "'')" << std::endl;
+		//std::cout << "CoreStreamBuf::SetPrefix('" << prefix << "'')" << std::endl;
 
-    mPrefix = prefix;
+		mPrefix = prefix;
 }
 
 void CoreStreamBuffer::ClearPrefix()
 {
-    mPrefix = "";
+		mPrefix = "";
 }
 void CoreStreamBuffer::Enable(bool doEnable)
 {
 //    std::cout << "CoreStreamBuf::Enable(" << doEnable << ")" << std::endl;
-    mEnabled = doEnable;
+	mEnabled = doEnable;
 }
 
+bool CoreStreamBuffer::IsEnabled()
+{
+	return mEnabled;
+}
 
 // When we sync the stream with the output.
 // 1) Output Plop then the buffer
@@ -26,14 +30,14 @@ void CoreStreamBuffer::Enable(bool doEnable)
 // 3) flush the actual output stream we are using.
 int CoreStreamBuffer::sync()
 {
-    //std::cout << "CoreStreamBuffer::sync()" << std::endl;
-    if(mEnabled)
-    {
-        //std::cout << "PRINTING. Prefix is: " << mPrefix << std::endl;
-        mOutputStream << mPrefix << str();
-    }
-    str("");
-    mOutputStream.flush();
-    //std::cout << "CoreStreamBuffer::sync[]" << std::endl;
-    return 0;
+		//std::cout << "CoreStreamBuffer::sync()" << std::endl;
+		if(mEnabled)
+		{
+				//std::cout << "PRINTING. Prefix is: " << mPrefix << std::endl;
+				mOutputStream << mPrefix << str();
+		}
+		str("");
+		mOutputStream.flush();
+		//std::cout << "CoreStreamBuffer::sync[]" << std::endl;
+		return 0;
 }
