@@ -1,32 +1,30 @@
 #include "Socket.hpp"
 #include <arpa/inet.h>
 
-using namespace std;
-
 Socket::Socket(uint32_t portNumber, size_t bufferSize) : CoreObject("SocketStream"), mPortNumber(portNumber),
 		mBufferSize(bufferSize), mIsOpen(false)
 {
-		DebugOut() << "PortNumber: " << mPortNumber << endl;
+		DebugOut() << "PortNumber: " << mPortNumber << std::endl;
 		mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
 }
 Socket::~Socket()
 {
-		DebugOut() << "~SocketStream()" << endl;
+		DebugOut() << "~SocketStream()" << std::endl;
 }
 bool Socket::Create()
 {
-	SetPrintPrefix(__func__, FUNC_PRINT);
+	PushPrintPrefix(__func__, FUNC_PRINT);
 
 	bool status = true;
 	struct sockaddr_in serv_addr;
 
-	StandardOut() << "Creating Socket on port " << mPortNumber << endl;
+	StandardOut() << "Creating Socket on port " << mPortNumber << std::endl;
 
 	mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
 
 	if (mSocketFD < 0)
 	{
-		 ErrorOut() << "Failed to create socket." << endl;
+		 ErrorOut() << "Failed to create socket." << std::endl;
 		 status = false;
 	}
 	else
@@ -37,16 +35,16 @@ bool Socket::Create()
 		serv_addr.sin_addr.s_addr = INADDR_ANY;
 		serv_addr.sin_port = htons(mPortNumber);
 
-		StandardOut() << "Binding to Socket " << mPortNumber << endl;
+		StandardOut() << "Binding to Socket " << mPortNumber << std::endl;
 
-		if (bind(mSocketFD, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+		if(bind(mSocketFD, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) < 0)
 		{
-		 ErrorOut() << "Failed to bind to socket." << endl;
+		 ErrorOut() << "Failed to bind to socket." << std::endl;
 		 status = false;
 		}
 	}
 
-	ClearPrintPrefix();
+	PopPrintPrefix();
 	return status;
 }
 
@@ -66,8 +64,8 @@ SocketConnection* Socket::Accept()
 }
 bool Socket::Destroy()
 {
-	SetPrintPrefix(__func__, FUNC_PRINT);
-	ErrorOut() << "Destroying Socket." << endl;
+	PushPrintPrefix(__func__, FUNC_PRINT);
+	ErrorOut() << "Destroying Socket." << std::endl;
 
 	//CLEANUP SocketConnections here.
 	for(size_t i=0;i<mConnections.size();++i)
@@ -78,14 +76,14 @@ bool Socket::Destroy()
 	}
 	mConnections.clear();
 
-	ClearPrintPrefix();
+	PopPrintPrefix();
 	return true;
 }
 int Socket::Listen()
 {
-	SetPrintPrefix(__func__, FUNC_PRINT);
-	StandardOut() << "Listening for connections..." << endl;
+	PushPrintPrefix(__func__, FUNC_PRINT);
+	StandardOut() << "Listening for connections..." << std::endl;
 	listen(mSocketFD,5);
-	ClearPrintPrefix();
+	PopPrintPrefix();
 	return 0;
 }

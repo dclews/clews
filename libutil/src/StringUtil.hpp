@@ -23,4 +23,5 @@ std::string trimLeft(std::string str, std::string toTrim);
 std::string trimRight(std::string str, std::string toTrim);
 bool startsWith(const std::string& str, const std::string& prefix);
 
+
 #endif

@@ -3,16 +3,17 @@
 
 #include <string>
 
+#include <clews/utility/KvpDB.hpp>
+
 namespace messagebus
 {
-	class MessageHeader
+	class MessageHeader : public KvpDB
 	{
 	private:
-		std::string& mHeaderBuffer;
+		std::string mHeaderBuffer;
 	public:
-		MessageHeader(std::string& headerBuffer);
-		const std::string& Field(std::string headerField);
-		int IntField(std::string headerField);
+		MessageHeader();
+		MessageHeader(std::string headerBuffer);
 	};
 }
 

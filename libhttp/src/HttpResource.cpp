@@ -30,7 +30,7 @@ uint32_t HttpResource::Load()
 
 				if(fileLoadStatus == FILE_LOADED)
 				{
-						for(int i=0;i<file.size();i++)
+						for(size_t i=0;i<file.size();i++)
 						{
 								mContent+=file.at(i) + "\r\n";
 						}

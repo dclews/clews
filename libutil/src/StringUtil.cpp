@@ -32,8 +32,12 @@ vector<string>& split(const string &s, const string& delim, std::vector<string> 
 		std::string token;
 		while ((delimPos = s.find(delim, startPos)) != std::string::npos)
 		{
-				token = s.substr(startPos, delimPos);
-				elems.push_back(token);
+				token = trimRight(trimLeft(s.substr(startPos, delimPos), delim), delim);
+				if(!token.empty())
+				{
+					cout << "Adding token: " << token << endl;
+					elems.push_back(token);
+				}
 				startPos = delimPos + delim.length();
 		}
 		if(startPos < s.length()) //Get the last token if it exists.
@@ -51,12 +55,19 @@ string trimRight(string str, string toTrim)
 }
 string trimLeft(string str, string toTrim)
 {
-		size_t pos = str.find_first_not_of(toTrim.c_str());
-		if(!str.empty() && pos != string::npos)
-		{
-				str.substr(pos);
-		}
-		return str;
+	string trimmed;
+	size_t pos = str.find_first_not_of(toTrim.c_str());
+
+	if(!str.empty() && pos != string::npos)
+	{
+			trimmed = str.substr(pos);
+	}
+	else
+	{
+		cout << "trimLeft: Returning empty string" << endl;
+	}
+
+	return trimmed;
 }
 bool startsWith(const string& str, const string& prefix)
 {

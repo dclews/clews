@@ -10,12 +10,13 @@ namespace messagebus
 	class Message
 	{
 	private:
-		KvpDB mContents;
-		MessageHeader* mBusMessageHeader;
+		KvpDB mBody;
+		MessageHeader mBusMessageHeader;
 	public:
+		Message(std::string header, std::string body);
 		Message(std::string message);
-		MessageHeader* Header();
-		KvpDB& Contents();
+		MessageHeader& Header();
+		KvpDB& Body();
 	};
 }
 

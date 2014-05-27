@@ -34,15 +34,15 @@ CoreStream& CoreObject::ErrorOut()
 	return mError;
 }
 
-void CoreObject::SetPrintPrefix(std::string prefix, enum PrintTypes type)
+void CoreObject::SetPrintPrefix(std::string prefix, PrintTypes type)
 {
 	if(type == FUNC_PRINT) prefix+="() ";
-	prefix = mTypePrefix + prefix;
+	mPrefix = mTypePrefix + prefix;
 
-	mSTD.SetPrefix("[STD] " + prefix);
-	mDebug.SetPrefix("[DEBUG] " + prefix);
-	mWarn.SetPrefix("[WARN] " + prefix);
-	mError.SetPrefix("[ERROR] " + prefix);
+	mSTD.SetPrefix("[STD] " + mPrefix);
+	mDebug.SetPrefix("[DEBUG] " + mPrefix);
+	mWarn.SetPrefix("[WARN] " + mPrefix);
+	mError.SetPrefix("[ERROR] " + mPrefix);
 }
 void CoreObject::ClearPrintPrefix()
 {
@@ -50,6 +50,24 @@ void CoreObject::ClearPrintPrefix()
 	mDebug.SetPrefix(CoreObject::mDebugPrefix);
 	mWarn.SetPrefix(CoreObject::mWarningPrefix);
 	mError.SetPrefix(CoreObject::mErrorPrefix);
+}
+void CoreObject::PushPrintPrefix(std::string prefix, PrintTypes type)
+{
+	mPrefixStack.push_back(make_pair(mPrefix, type));
+	SetPrintPrefix(prefix, type);
+}
+void CoreObject::PopPrintPrefix()
+{
+	std::pair<std::string, PrintTypes> newPrefix = mPrefixStack.back();
+	if(mPrefixStack.empty())
+	{
+		ClearPrintPrefix();
+	}
+	else
+	{
+		SetPrintPrefix(newPrefix.first, newPrefix.second);
+		mPrefixStack.pop_back();
+	}
 }
 
 std::string CoreObject::TypeID()

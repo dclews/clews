@@ -57,7 +57,7 @@ string virtpath(string relPath)
 	{
 		virtpath = getFullPath(relPath);
 	}
-	while(errno = ENOENT && relPath.find_last_of('/') != string::npos);
+	while(errno == ENOENT && relPath.find_last_of('/') != string::npos);
 	errno = 0;
 
 	return virtpath;
