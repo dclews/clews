@@ -10,15 +10,15 @@
 class SocketConnection : public SocketConnectionBase
 {
 private:
-    int mSocketFD;
+	int mSocketFD;
 
 public:
-    SocketConnection(int socketFD, size_t bufferSize);
-    ~SocketConnection();
+	SocketConnection(int socketFD, size_t bufferSize);
+	~SocketConnection();
 
-    bool Open(std::string hostname);
-    void Close();
-    bool Accept();
+	bool open(std::string hostname);
+	void close();
+	void accept();
 };
 
 #endif // SOCKETCONNECTION_HPP

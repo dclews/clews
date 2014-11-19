@@ -9,8 +9,8 @@
 class SocketClient : public SocketConnectionBase
 {
 public:
-    SocketClient(size_t bufferSize);
-    bool Open(std::string hostname, uint32_t port);
+	SocketClient(size_t bufferSize);
+	bool open(std::string hostname, uint32_t port);
 };
 
 #endif

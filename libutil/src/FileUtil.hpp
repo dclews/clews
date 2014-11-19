@@ -16,9 +16,16 @@ typedef id_t zoneid_t;
 #include <string>
 #include <vector>
 
+enum file_load_status
+{
+	FILE_NOT_FOUND = 0,
+	FILE_LOADED = 1
+};
+
 std::vector<std::string> readFile(const char* filePath, int& success);
 std::vector<std::string> readFile(const std::string& filePath, int& success);
 
 std::string getFullPath(const std::string& relPath);
+std::string virtpath(const std::string& relPath);
 
 #endif

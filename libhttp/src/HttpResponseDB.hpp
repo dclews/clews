@@ -9,8 +9,8 @@
 class HttpResponseDB : public KvpDB
 {
 public:
-    HttpResponseDB();
-    std::string ResponseString(int statusCode);
+	HttpResponseDB();
+	std::string ResponseString(int statusCode);
 };
 
 #endif

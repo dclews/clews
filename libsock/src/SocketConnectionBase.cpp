@@ -1,66 +1,68 @@
 #include "SocketConnectionBase.hpp"
+#include <unistd.h>
+#include <stdexcept>
 
 using namespace std;
 
-SocketConnectionBase::SocketConnectionBase(string typeID, size_t bufferSize) : CoreObject(typeID), mBufferSize(bufferSize), mIsOpen(false) {}
+SocketConnectionBase::SocketConnectionBase(size_t bufferSize) : mIsOpen(false), mBufferSize(bufferSize) {}
 
-string SocketConnectionBase::Readn(uint32_t bufferSize)
+vector<char> SocketConnectionBase::readn(uint32_t bufferSize)
 {
-    SetPrintPrefix(__func__, FUNC_PRINT);
-    char buffer[bufferSize];
-    int n = read(mConnectionFD,buffer,bufferSize);
+	vector<char> data(bufferSize);
 
-    if (n < 0)
-    {
-        ErrorOut() << "Failed to read from socket." << endl;
-    }
+	int n = ::read(mConnectionFD,data.data(),bufferSize);
 
-    string strBuffer(buffer);
-    DebugOut() << "[R<-" << mForeignIPStr << "]" << strBuffer << endl;
-    ClearPrintPrefix();
-    return strBuffer;
+	if (n < 0)
+	{
+		throw runtime_error("Failed to read from socket.");
+	}
+
+	data.resize(n);
+
+	return data;
 }
-string SocketConnectionBase::Read()
+vector<char> SocketConnectionBase::read()
 {
-    return Readn(mBufferSize);
-}
-void SocketConnectionBase::operator>>(string& msg)
-{
-    msg = Read();
+	return readn(mBufferSize);
 }
 
-void SocketConnectionBase::Write(const std::string& msg)
+void SocketConnectionBase::write(const char* msg, size_t msgSize)
 {
-    SetPrintPrefix(__func__, FUNC_PRINT);
-    DebugOut() << "[W->" << mForeignIPStr << "] " << msg << endl;
-    write(mConnectionFD, (const void*) msg.c_str(), msg.length());
-    ClearPrintPrefix();
+	::write(mConnectionFD, msg, msgSize);
 }
-void SocketConnectionBase::WriteLine(const std::string& msg)
+void SocketConnectionBase::write(const std::vector<char>& msg)
 {
-    std::string lineMsg = msg+"\n";
-    Write(lineMsg);
+	::write(mConnectionFD, msg.data(), msg.size());
 }
-void SocketConnectionBase::operator<<(std::string msg)
+void SocketConnectionBase::write(const std::string& msg)
 {
-    Write(msg);
+	::write(mConnectionFD, (const void*) msg.c_str(), msg.length());
 }
 
-bool SocketConnectionBase::SocketConnectionBase::IsOpen()
+void SocketConnectionBase::operator<<(const vector<char>& msg)
 {
-    return mIsOpen;
+	write(msg);
+}
+void SocketConnectionBase::operator<<(const string& msg)
+{
+	write(msg);
 }
 
-void SocketConnectionBase::SocketConnectionBase::Close()
+bool SocketConnectionBase::SocketConnectionBase::isOpen()
 {
-    if(mIsOpen)	close(mConnectionFD);
+	return mIsOpen;
+}
+
+void SocketConnectionBase::SocketConnectionBase::close()
+{
+	if(mIsOpen)	::close(mConnectionFD);
 }
 
 int SocketConnectionBase::FD()
 {
-    return mConnectionFD;
+	return mConnectionFD;
 }
-int SocketConnectionBase::BindToFD(int fd)
+int SocketConnectionBase::bindToFD(int fd)
 {
-    return dup2(mConnectionFD, fd);
+	return dup2(mConnectionFD, fd);
 }

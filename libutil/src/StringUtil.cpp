@@ -41,6 +41,13 @@ vector<string>& split(const string &s, const string& delim, std::vector<string> 
 			elems.push_back(s.substr(startPos, string::npos));
 		}
 
+		for(size_t i=0;i<elems.size();++i)
+		{
+			cout << "Elems:";
+			cout << elems[i] << ", ";
+		}
+		cout << endl;
+
 		return elems;
 }
 

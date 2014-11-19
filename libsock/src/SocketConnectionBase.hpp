@@ -3,32 +3,34 @@
 
 #include <clews/core/CoreObject.hpp>
 #include <string>
+#include <vector>
 
-class SocketConnectionBase : public CoreObject
+class SocketConnectionBase
 {
 protected:
-    bool mIsOpen;
-    int mConnectionFD;
-    uint32_t mForeignIP;
-    uint16_t mForeignPort;
-    std::string mForeignIPStr;
-    size_t mBufferSize;
+	bool mIsOpen;
+	int mConnectionFD;
+	uint32_t mForeignIP;
+	uint16_t mForeignPort;
+	std::string mForeignIPStr;
+	size_t mBufferSize;
 public:
-    SocketConnectionBase(std::string typeID, size_t bufferSize);
+	SocketConnectionBase(size_t bufferSize);
 
-    std::string Readn(uint32_t bufferSize);
-    std::string Read();
-    void operator>>(std::string& msg);
+	std::vector<char> readn(uint32_t bufferSize);
+	std::vector<char> read();
 
-    void Write(const std::string& msg);
-    void WriteLine(const std::string& msg);
-    void operator<<(std::string msg);
+	void write(const char* msg, size_t msgSize);
+	void write(const std::vector<char>& msg);
+	void write(const std::string& msg);
+	void operator<<(const std::vector<char>& msg);
+	void operator<<(const std::string& msg);
 
-    bool IsOpen();
-    void Close();
+	bool isOpen();
+	void close();
 
-    int FD();
-    int BindToFD(int fd);
+	int FD();
+	int bindToFD(int fd);
 };
 
 #endif

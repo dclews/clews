@@ -9,12 +9,12 @@ private:
    bool mEnabled;
    CoreStreamBuffer mStreamBuf;
 public:
-    CoreStream(std::ostream& target, bool enable);
+	CoreStream(std::ostream& target, bool enable);
 
-    void SetPrefix(std::string prefix);
-    void ClearPrefix();
-    void Enable(bool doEnable);
-    bool IsEnabled();
+	void SetPrefix(std::string prefix);
+	void ClearPrefix();
+	void Enable(bool doEnable);
+	bool IsEnabled();
 };
 
 #endif

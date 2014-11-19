@@ -17,32 +17,32 @@ typedef id_t zoneid_t;
 #include <unistd.h>
 #include <vector>
 
-#include <sys/types.h> 
+#include <sys/types.h>
 #include <sys/socket.h>
 
 #include "SocketConnection.hpp"
 #include "SocketClient.hpp"
 #include <clews/core/CoreObject.hpp>
 
-class Socket : public CoreObject
+class Socket
 {
 private:
-    int mSocketFD;
-    uint32_t mPortNumber;
-    size_t mBufferSize;
-    bool mIsOpen;
-    std::vector<SocketConnection*> mConnections;
+	int mSocketFD;
+	uint32_t mPortNumber;
+	size_t mBufferSize;
+	bool mIsOpen;
+	std::vector<SocketConnection*> mConnections;
 public:
-    Socket(uint32_t portNumber, size_t bufferSize);
-    ~Socket();
+	Socket(uint32_t portNumber, size_t bufferSize);
+	~Socket();
 
-    SocketConnection* Open(std::string hostname);
+	SocketConnection* open(std::string hostname);
 
-	bool Create();
-	bool Destroy();
-	
-    int Listen();
-    SocketConnection* Accept();
+	void create();
+	void destroy();
+
+	void listen();
+	SocketConnection* accept();
 };
 
 #endif

@@ -1,88 +1,67 @@
 #include "Socket.hpp"
 #include <arpa/inet.h>
+#include <stdexcept>
 
 using namespace std;
 
-Socket::Socket(uint32_t portNumber, size_t bufferSize) : CoreObject("SocketStream"), mPortNumber(portNumber),
-    mBufferSize(bufferSize), mIsOpen(false)
+Socket::Socket(uint32_t portNumber, size_t bufferSize) : mPortNumber(portNumber),
+		mBufferSize(bufferSize), mIsOpen(false)
 {
-    DebugOut() << "PortNumber: " << mPortNumber << endl;
-    mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
+		mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
 }
 Socket::~Socket()
 {
-    DebugOut() << "~SocketStream()" << endl;
 }
-bool Socket::Create()
+void Socket::create()
 {
-    SetPrintPrefix(__func__, FUNC_PRINT);
+	struct sockaddr_in serv_addr;
 
-    bool status = true;
-    struct sockaddr_in serv_addr;
+	mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
 
-    StandardOut() << "Creating Socket on port " << mPortNumber << endl;
-
-    mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
-     
-    if (mSocketFD < 0)
-	{ 
-       ErrorOut() << "Failed to create socket." << endl;
-       status = false;
+	if (mSocketFD < 0)
+	{
+		 throw runtime_error("Failed to create socket.");
 	}
-    else
-    {
-        memset((char*) &serv_addr, 0, sizeof(serv_addr));
+	memset((char*) &serv_addr, 0, sizeof(serv_addr));
 
-        serv_addr.sin_family = AF_INET;
-        serv_addr.sin_addr.s_addr = INADDR_ANY;
-        serv_addr.sin_port = htons(mPortNumber);
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_addr.s_addr = INADDR_ANY;
+	serv_addr.sin_port = htons(mPortNumber);
 
-        StandardOut() << "Binding to Socket " << mPortNumber << endl;
 
-        if (bind(mSocketFD, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
-        {
-           ErrorOut() << "Failed to bind to socket." << endl;
-           status = false;
-        }
-    }
-    
-    ClearPrintPrefix();
-    return status;
+	if (bind(mSocketFD, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+	{
+		throw runtime_error("Failed to bind to socket.");
+	}
 }
 
-SocketConnection* Socket::Accept()
+SocketConnection* Socket::accept()
 {
-    SocketConnection* connection = new SocketConnection(mSocketFD, mBufferSize);
-    if(connection->Accept())
-    {
-        mConnections.push_back(connection);
-    }
-    else
-    {
-        delete connection;
-        connection = NULL;
-    }
-    return connection;
-}
-bool Socket::Destroy()
-{
-    SetPrintPrefix(__func__, FUNC_PRINT);
-    ErrorOut() << "Destroying Socket." << endl;
+	SocketConnection* connection = new SocketConnection(mSocketFD, mBufferSize);
 
-    //CLEANUP SocketConnections here.
-    for(size_t i=0;i<mConnections.size();++i)
-    {
-        mConnections[i]->Close();
-    }
-
-    ClearPrintPrefix();
-    return true;
+	try
+	{
+		connection->accept();
+		mConnections.push_back(connection);
+	}
+	catch(const runtime_error& re)
+	{
+		delete connection;
+		throw runtime_error("Failed to accept  connection");
+	}
+	return connection;
 }
-int Socket::Listen()
+void Socket::destroy()
 {
-    SetPrintPrefix(__func__, FUNC_PRINT);
-    StandardOut() << "Listening for connections..." << endl;
-    listen(mSocketFD,5);
-    ClearPrintPrefix();
-    return 0;
+	for(size_t i=0;i<mConnections.size();++i)
+	{
+		SocketConnection* con = mConnections[i];
+		con->close();
+		delete con;
+	}
+	mConnections.clear();
+}
+void Socket::listen()
+{
+	::listen(mSocketFD,5);
 }
