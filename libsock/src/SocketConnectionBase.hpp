@@ -4,6 +4,7 @@
 #include <clews/core/CoreObject.hpp>
 #include <string>
 #include <vector>
+#include <stdint.h>
 
 class SocketConnectionBase
 {
@@ -14,10 +15,14 @@ protected:
 	uint16_t mForeignPort;
 	std::string mForeignIPStr;
 	size_t mBufferSize;
-public:
-	SocketConnectionBase(size_t bufferSize);
+	bool mWrapMessages;
 
-	std::vector<char> readn(uint32_t bufferSize);
+	void sendHeader(size_t messageSize);
+	size_t readHeader();
+public:
+	SocketConnectionBase(size_t bufferSize=512, bool wrapMessages=false);
+
+	std::vector<char> readn(uint32_t bufferSize, bool readUntilFull=false);
 	std::vector<char> read();
 
 	void write(const char* msg, size_t msgSize);
@@ -25,6 +30,12 @@ public:
 	void write(const std::string& msg);
 	void operator<<(const std::vector<char>& msg);
 	void operator<<(const std::string& msg);
+
+	void writeInt32(int32_t msg);
+	int32_t readInt32();
+
+	void setMessageWrapping(bool wrapMessages);
+	bool messagesWrapped();
 
 	bool isOpen();
 	void close();

@@ -13,10 +13,9 @@ private:
 	int mSocketFD;
 
 public:
-	SocketConnection(int socketFD, size_t bufferSize);
+	SocketConnection(int socketFD, size_t bufferSize=512);
 	~SocketConnection();
 
-	bool open(std::string hostname);
 	void close();
 	void accept();
 };

@@ -33,7 +33,7 @@ private:
 	bool mIsOpen;
 	std::vector<SocketConnection*> mConnections;
 public:
-	Socket(uint32_t portNumber, size_t bufferSize);
+	Socket(uint32_t portNumber, size_t bufferSize=512);
 	~Socket();
 
 	SocketConnection* open(std::string hostname);
