@@ -7,9 +7,10 @@ using namespace std;
 
 void SocketConnectionBase::sendHeader(size_t messageSize)
 {
-	string header = "!" + to_string(messageSize) + "$";
 	mWrapMessages = false;
-	write(header);
+	write("!", 1);
+	writeInt32(messageSize);
+	write("$", 1);
 	mWrapMessages = true;
 }
 
