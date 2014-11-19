@@ -7,6 +7,7 @@ using namespace std;
 
 void SocketConnectionBase::sendHeader(size_t messageSize)
 {
+	cout << "sendHeader(" << messageSize << ")" << endl;
 	mWrapMessages = false;
 	write("!", 1);
 	writeInt32(messageSize);
@@ -16,17 +17,20 @@ void SocketConnectionBase::sendHeader(size_t messageSize)
 
 size_t SocketConnectionBase::readHeader()
 {
+
 	mWrapMessages = false;
 	char startMarker = readn(1, true).at(0);
-	int32_t length = readInt32();
+	int32_t messageSize = readInt32();
 	char endMarker = readn(1, true).at(0);
 	mWrapMessages = true;
+
+	cout << "readHeader() SM:" << startMarker << " EM:" << endMarker << " Size:" << messageSize << endl;
 
 	if(startMarker != '!' || endMarker != '$')
 	{
 		throw runtime_error("Improperly wrapped message.");
 	}
-	return length;
+	return messageSize;
 }
 
 SocketConnectionBase::SocketConnectionBase(size_t bufferSize, bool wrapMessages) : mIsOpen(false), mBufferSize(bufferSize), mWrapMessages(wrapMessages) {}
@@ -35,21 +39,19 @@ vector<char> SocketConnectionBase::readn(uint32_t bufferSize, bool readUntilFull
 {
 	vector<char> data(bufferSize);
 
-	int n = ::read(mConnectionFD,data.data(),bufferSize);
+	int bytesRead = ::read(mConnectionFD,data.data(),bufferSize);
 
-	if (n < 0)
+	if (bytesRead < 0)
 	{
 		throw runtime_error("Failed to read from socket.");
 	}
 	if(readUntilFull)
 	{
-		while(n < bufferSize) //Read the remaining data;
+		while(bytesRead < bufferSize) //Read the remaining data;
 		{
-			n+= ::read(mConnectionFD, data.data(), bufferSize-n);
+			bytesRead+= ::read(mConnectionFD, data.data(), bufferSize-bytesRead);
 		}
 	}
-
-	data.resize(n);
 
 	return data;
 }
@@ -67,39 +69,43 @@ vector<char> SocketConnectionBase::read()
 
 void SocketConnectionBase::write(const char* msg, size_t msgSize)
 {
+	if(!mIsOpen)
+	{
+		throw runtime_error("Tried to write to a disconnected socket");
+	}
 	if(mWrapMessages)
 	{
 		sendHeader(msgSize);
 	}
-	if(!mIsOpen)
-	{
-		throw runtime_error("Tried to write to a disconnected socket");
-	}
+	cout << "write(" << msg << "," << msgSize << ")" << endl;
 	::write(mConnectionFD, msg, msgSize);
 }
 void SocketConnectionBase::write(const std::vector<char>& msg)
 {
+	if(!mIsOpen)
+	{
+		throw runtime_error("Tried to write to a disconnected socket");
+	}
 	if(mWrapMessages)
 	{
 		sendHeader(msg.size());
 	}
-	if(!mIsOpen)
-	{
-		throw runtime_error("Tried to write to a disconnected socket");
-	}
+	cout << "write(vector<char> Size: " << msg.size() << ")" << endl;
 	::write(mConnectionFD, msg.data(), msg.size());
 }
 void SocketConnectionBase::write(const std::string& msg)
 {
-	if(mWrapMessages)
-	{
-		sendHeader(msg.length());
-	}
 	if(!mIsOpen)
 	{
 		throw runtime_error("Tried to write to a disconnected socket");
 	}
-	::write(mConnectionFD, (const void*) msg.c_str(), msg.length()+1);
+	if(mWrapMessages)
+	{
+		sendHeader(msg.length());
+	}
+	cout << "write(" << msg << ") Length: " << msg.length() << ")" << endl;
+
+	::write(mConnectionFD, (const void*) msg.c_str(), msg.length());
 }
 
 void SocketConnectionBase::operator<<(const vector<char>& msg)
@@ -113,6 +119,7 @@ void SocketConnectionBase::operator<<(const string& msg)
 
 void SocketConnectionBase::writeInt32(int32_t msg)
 {
+	cout << "writeInt32(" << msg << ")" << endl;
 	msg = htonl(msg);
 	write((const char*) &msg, 4);
 }
