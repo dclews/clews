@@ -16,9 +16,11 @@ void SocketConnectionBase::sendHeader(size_t messageSize)
 
 size_t SocketConnectionBase::readHeader()
 {
+	mWrapMessages = false;
 	char startMarker = readn(1, true).at(0);
 	int32_t length = readInt32();
 	char endMarker = readn(1, true).at(0);
+	mWrapMessages = true;
 
 	if(startMarker != '!' || endMarker != '$')
 	{
@@ -117,6 +119,14 @@ void SocketConnectionBase::writeInt32(int32_t msg)
 
 int32_t SocketConnectionBase::readInt32()
 {
+	if(mWrapMessages)
+	{
+		size_t messageSize = readHeader();
+		if(messageSize != 4)
+		{
+			throw runtime_error("Message is too large to be an int32");
+		}
+	}
 	vector<char> intVector = readn(4, true);
 	int32_t* intPtr = (int32_t*) &intVector.at(0);
 
