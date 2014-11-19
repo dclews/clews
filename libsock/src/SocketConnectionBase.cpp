@@ -8,7 +8,9 @@ using namespace std;
 void SocketConnectionBase::sendHeader(size_t messageSize)
 {
 	string header = "!" + to_string(messageSize) + "$";
+	mWrapMessages = false;
 	write(header);
+	mWrapMessages = true;
 }
 
 size_t SocketConnectionBase::readHeader()
@@ -94,7 +96,7 @@ void SocketConnectionBase::write(const std::string& msg)
 	{
 		throw runtime_error("Tried to write to a disconnected socket");
 	}
-	::write(mConnectionFD, (const void*) msg.c_str(), msg.length());
+	::write(mConnectionFD, (const void*) msg.c_str(), msg.length()+1);
 }
 
 void SocketConnectionBase::operator<<(const vector<char>& msg)
