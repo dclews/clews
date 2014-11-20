@@ -1,11 +1,17 @@
 #ifndef SOCKETCONNECTION_HPP
 #define SOCKETCONNECTION_HPP
 
+//Only include netdb.h and arpa/inet.h on non-windows platforms.
+#if defined(__WIN32__) || defined(_WIN32)
+#include <WinSock2.h>
+#else
+#include <netdb.h>
+#include <arpa/inet.h>
+#endif
+
 #include <string>
 #include <string.h>
-#include <netdb.h>
 #include "SocketConnectionBase.hpp"
-#include <arpa/inet.h>
 
 class SocketConnection : public SocketConnectionBase
 {

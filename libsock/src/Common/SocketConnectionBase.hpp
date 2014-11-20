@@ -1,7 +1,6 @@
 #ifndef SOCKET_CONNECTION_BASE_HPP
 #define SOCKET_CONNECTION_BASE_HPP
 
-#include <clews/core/CoreObject.hpp>
 #include <string>
 #include <vector>
 #include <stdint.h>

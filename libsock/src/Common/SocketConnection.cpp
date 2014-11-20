@@ -1,5 +1,18 @@
 #include "SocketConnection.hpp"
+
+//Only include unistd.h on non-windows platforms
+//A bunch of network things also need defining on windows.
+#if defined(__WIN32__) || defined(_WIN32)
+typedef int socklen_t;
+#define INET_ADDRSTRLEN (16)
+#define INET6_ADDRSTRLEN (48)
+#include <io.h> //close, read...
+#include <WinSock2.h>
+#include "../WIN/NetUtil.hpp"
+#else
 #include <unistd.h>
+#endif
+
 #include <stdexcept>
 
 using namespace std;

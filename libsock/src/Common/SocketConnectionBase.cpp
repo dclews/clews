@@ -1,7 +1,16 @@
 #include "SocketConnectionBase.hpp"
+
+//Only include unistd.h and netinet/in.h on non-windows platforms
+#if defined(__WIN32__) || defined(_WIN32)
+#include <WinSock2.h>
+#include <io.h> //close, read...
+#else
 #include <unistd.h>
-#include <stdexcept>
 #include <netinet/in.h>
+#endif
+
+#include <stdexcept>
+#include <iostream>
 
 using namespace std;
 
@@ -150,12 +159,12 @@ bool SocketConnectionBase::messagesWrapped()
 	return mWrapMessages;
 }
 
-bool SocketConnectionBase::SocketConnectionBase::isOpen()
+bool SocketConnectionBase::isOpen()
 {
 	return mIsOpen;
 }
 
-void SocketConnectionBase::SocketConnectionBase::close()
+void SocketConnectionBase::close()
 {
 	if(mIsOpen)	::close(mConnectionFD);
 }

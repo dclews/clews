@@ -1,7 +1,13 @@
 #include "SocketClient.hpp"
 
+//Only include netdb.h and netinet/in.h on non-windows platforms.
+#if defined(__WIN32__) || defined(_WIN32)
+#include <WinSock2.h>
+#else
 #include <netinet/in.h>
 #include <netdb.h>
+#endif
+
 #include <stdexcept>
 
 using namespace std;
