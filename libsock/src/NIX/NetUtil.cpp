@@ -1,4 +1,4 @@
-#include "../../Common/NetUtil.hpp"
+#include "NetUtil.hpp"
 
 //Dummy functions, UNIX doesn't require special initialisation.
 int init_net()

@@ -26,7 +26,6 @@ void SocketConnectionBase::sendHeader(size_t messageSize)
 
 size_t SocketConnectionBase::readHeader()
 {
-
 	mWrapMessages = false;
 	char startMarker = readn(1, true).at(0);
 	int32_t messageSize = readInt32();
