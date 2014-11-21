@@ -47,7 +47,7 @@ vector<char> SocketConnectionBase::readn(uint32_t bufferSize, bool readUntilFull
 {
 	vector<char> data(bufferSize);
 
-	int bytesRead = ::read(mConnectionFD,data.data(),bufferSize);
+    int bytesRead = ::recv(mConnectionFD,data.data(),bufferSize,0);
 
 	if (bytesRead < 0)
 	{
@@ -57,7 +57,7 @@ vector<char> SocketConnectionBase::readn(uint32_t bufferSize, bool readUntilFull
 	{
 		while(bytesRead < bufferSize) //Read the remaining data;
 		{
-			bytesRead+= ::read(mConnectionFD, data.data(), bufferSize-bytesRead);
+            bytesRead+= ::recv(mConnectionFD, data.data(), bufferSize-bytesRead, 0);
 		}
 	}
 
@@ -86,7 +86,7 @@ void SocketConnectionBase::write(const char* msg, size_t msgSize)
 		sendHeader(msgSize);
 	}
 	cout << "write(" << msg << "," << msgSize << ")" << endl;
-	::write(mConnectionFD, msg, msgSize);
+    ::send(mConnectionFD, msg, msgSize, 0);
 }
 void SocketConnectionBase::write(const std::vector<char>& msg)
 {
@@ -99,7 +99,7 @@ void SocketConnectionBase::write(const std::vector<char>& msg)
 		sendHeader(msg.size());
 	}
 	cout << "write(vector<char> Size: " << msg.size() << ")" << endl;
-	::write(mConnectionFD, msg.data(), msg.size());
+    ::send(mConnectionFD, msg.data(), msg.size(), 0);
 }
 void SocketConnectionBase::write(const std::string& msg)
 {
@@ -113,16 +113,16 @@ void SocketConnectionBase::write(const std::string& msg)
 	}
 	cout << "write(" << msg << ") Length: " << msg.length() << ")" << endl;
 
-	::write(mConnectionFD, (const void*) msg.c_str(), msg.length());
+    ::send(mConnectionFD, (const char*) msg.c_str(), msg.length(), 0);
 }
 
 void SocketConnectionBase::operator<<(const vector<char>& msg)
 {
-	write(msg);
+    write(msg);
 }
 void SocketConnectionBase::operator<<(const string& msg)
 {
-	write(msg);
+    write(msg);
 }
 
 void SocketConnectionBase::writeInt32(int32_t msg)
